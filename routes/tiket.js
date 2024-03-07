@@ -43,7 +43,7 @@ router.post("/createTickets", async (req, res) => {
 
     // Crea los 1000 tickets
     const tickets = [];
-    for (let i = 1; i <= 1000; i++) {
+    for (let i = 0; i <= 999; i++) {
       tickets.push({ ticketNumber: i });
     }
 
@@ -114,14 +114,14 @@ router.post("/buyTickets", async (req, res) => {
 
     const ticketTotalesMensaje = `Se han comprado ${quantity} tickets.`;
     const ticketVendidosMensaje =
-      "Tickets vendidos: " + chosenIndices.map((index) => `#${ticket.soldTickets[index].ticketNumber}`).join(", ");
+      chosenIndices.map((index) => `#${ticket.soldTickets[index].ticketNumber}`).join(", ");
 
     console.log(`Se han comprado ${quantity} tickets.`);
     console.log(
       "Tickets vendidos:",
       chosenIndices.map((index) => `#${ticket.soldTickets[index].ticketNumber}`).join(", ")
     );
-    res.status(200).send(`${ticketTotalesMensaje} , ${ticketVendidosMensaje}`);
+    res.status(200).send(`${ticketVendidosMensaje}`);
   } catch (error) {
     console.error("Error al comprar los tickets:", error);
     res.status(500).send({ message: error.message });
