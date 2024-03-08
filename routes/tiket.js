@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Ticket = require("../models/Ticket");
+const ResendImport = require("resend");
 
+const resendEmail = new ResendImport.Resend(
+  "re_RS8DwDZf_A7WbFTdc8DZiyBSYvhKyZvTq"
+);
 // Endpoints
 
 router.get("/allTickets", async (req, res) => {
@@ -16,7 +20,9 @@ router.get("/search/:idTicket", async (req, res) => {
     const ticket = await Ticket.findOne({});
 
     if (ticket) {
-      const foundTicket = ticket.soldTickets.find((t) => t.ticketNumber === parseInt(idTicket));
+      const foundTicket = ticket.soldTickets.find(
+        (t) => t.ticketNumber === parseInt(idTicket)
+      );
 
       if (foundTicket) {
         res.status(200).json(foundTicket);
@@ -48,7 +54,10 @@ router.post("/createTickets", async (req, res) => {
     }
 
     // Guarda los tickets en la base de datos
-    const ticketCreated = await Ticket.create({ stock: 1000, soldTickets: tickets });
+    const ticketCreated = await Ticket.create({
+      stock: 1000,
+      soldTickets: tickets,
+    });
 
     console.log("Se han creado los 100 tickets.");
     res.status(201).send(ticketCreated);
@@ -65,7 +74,9 @@ router.post("/buyTickets", async (req, res) => {
     // Verifica que la cantidad solicitada sea válida
     if (quantity <= 0) {
       console.log("La cantidad de tickets solicitada no es válida.");
-      return res.status(400).send("La cantidad de tickets solicitada no es válida.");
+      return res
+        .status(400)
+        .send("La cantidad de tickets solicitada no es válida.");
     }
 
     // Encuentra la rifa en la base de datos
@@ -73,27 +84,38 @@ router.post("/buyTickets", async (req, res) => {
 
     // Verifica si hay suficiente stock disponible
     if (ticket.stock < quantity) {
-      console.log(`Lo siento, solo quedan ${ticket.stock} tickets disponibles.`);
-      return res.status(400).send(`Lo siento, solo quedan ${ticket.stock} tickets disponibles.`);
+      console.log(
+        `Lo siento, solo quedan ${ticket.stock} tickets disponibles.`
+      );
+      return res
+        .status(400)
+        .send(`Lo siento, solo quedan ${ticket.stock} tickets disponibles.`);
     }
 
     // Encuentra los índices de los tickets disponibles
-    const availableTicketIndices = ticket.soldTickets.reduce((acc, ticket, index) => {
-      if (!ticket.buyerName) acc.push(index);
-      return acc;
-    }, []);
+    const availableTicketIndices = ticket.soldTickets.reduce(
+      (acc, ticket, index) => {
+        if (!ticket.buyerName) acc.push(index);
+        return acc;
+      },
+      []
+    );
 
     // Verifica si hay suficientes tickets disponibles
     if (availableTicketIndices.length < quantity) {
       console.log("Lo siento, no hay suficientes tickets disponibles.");
 
-      return res.status(400).send("Lo siento, no hay suficientes tickets disponibles.");
+      return res
+        .status(400)
+        .send("Lo siento, no hay suficientes tickets disponibles.");
     }
 
     // Elige aleatoriamente los índices de los tickets disponibles
     const chosenIndices = [];
     while (chosenIndices.length < quantity) {
-      const randomIndex = Math.floor(Math.random() * availableTicketIndices.length);
+      const randomIndex = Math.floor(
+        Math.random() * availableTicketIndices.length
+      );
       const chosenIndex = availableTicketIndices[randomIndex];
       chosenIndices.push(chosenIndex);
       // Elimina el índice elegido para evitar que se seleccione nuevamente
@@ -113,14 +135,30 @@ router.post("/buyTickets", async (req, res) => {
     await ticket.save();
 
     const ticketTotalesMensaje = `Se han comprado ${quantity} tickets.`;
-    const ticketVendidosMensaje =
-      chosenIndices.map((index) => `#${ticket.soldTickets[index].ticketNumber}`).join(", ");
+    const ticketVendidosMensaje = chosenIndices
+      .map((index) => `#${ticket.soldTickets[index].ticketNumber}`)
+      .join(", ");
 
     console.log(`Se han comprado ${quantity} tickets.`);
     console.log(
       "Tickets vendidos:",
-      chosenIndices.map((index) => `#${ticket.soldTickets[index].ticketNumber}`).join(", ")
+      chosenIndices
+        .map((index) => `#${ticket.soldTickets[index].ticketNumber}`)
+        .join(", ")
     );
+
+    const { data, error } = await resendEmail.emails.send({
+      from: "Oscar <contacto@sorteos-oscar.com>",
+      to: [buyerEmail],
+      subject: "lo que se te ocurra",
+      html: `Tickets vendidos: <strong>${ticketVendidosMensaje}</strong>`,
+    });
+
+    if (error) {
+      console.error("Error al enviar email:", error);
+      res.status(500).send({ message: error.message });
+    }
+
     res.status(200).send(`${ticketVendidosMensaje}`);
   } catch (error) {
     console.error("Error al comprar los tickets:", error);
