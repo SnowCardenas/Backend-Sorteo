@@ -226,6 +226,7 @@ router.post("/buyTickets", async (req, res) => {
       <body>
         <div class="container">
           <div class="content">
+            <h2 class="title">¡Hola <span class="ticket">${buyerName}</span>!</h2>
             <h2 class="title">Número de <span class="ticket">Ticket</span></h2>
             <div class="ticket-container">
               <p id="ticketNumber" class="ticket-number">${ticketVendidosMensaje}</p>
