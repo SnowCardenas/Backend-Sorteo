@@ -148,10 +148,94 @@ router.post("/buyTickets", async (req, res) => {
     );
 
     const { data, error } = await resendEmail.emails.send({
-      from: "Oscar <contacto@sorteos-oscar.com>",
+      from: "Sorteos Oscar <contacto@sorteos-oscar.com>",
       to: [buyerEmail],
-      subject: "lo que se te ocurra",
-      html: `Tickets vendidos: <strong>${ticketVendidosMensaje}</strong>`,
+      subject: "Boleto Rifa",
+      html: `<!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Boletos</title>
+        <style>
+          body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            text-align: center;
+          }
+          .content {
+            text-align: center;
+            background-color: #222;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 30%;
+          }
+          .title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 10px;
+          }
+          .title .ticket {
+            color: #e70009;
+          }
+          .ticket-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .ticket-number {
+            color: #e70009;
+            text-align: center !important;
+            font-size: 36px;
+            font-weight: bold;
+            z-index: 10;
+          }
+          .ticket-img {
+            position: absolute;
+            width: 40%;
+          }
+          @media (max-width: 768px) {
+            .ticket-container {
+              flex-direction: column;
+            }
+            .ticket-img {
+              width: 80%;
+              margin-bottom: 20px;
+            }
+            .ticket-number {
+              font-size: 24px;
+            }
+          }
+          @media (max-width: 480px) {
+            .ticket-img {
+              width: 100%;
+            }
+            .ticket-number {
+              font-size: 18px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="content">
+            <h2 class="title">Número de <span class="ticket">Ticket</span></h2>
+            <div class="ticket-container">
+              <p id="ticketNumber" class="ticket-number">${ticketVendidosMensaje}</p>
+              
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+      `,
     });
 
     if (error) {
