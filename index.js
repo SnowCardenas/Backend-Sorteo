@@ -17,6 +17,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
+app.get('/health', (req, res) => {
+  res.send('ok');
+});
+
 app.use("/api", routes);
 
 async function wakeUp() {
