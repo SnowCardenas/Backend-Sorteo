@@ -1,2 +1,2 @@
-const User = require("./User");
-const Ticket = require("./Ticket");
+import User from "./User";
+import Ticket from "./Ticket";

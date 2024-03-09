@@ -1,13 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const routes = require("./routes");
+import express from "express";
+import { connectDB } from "./config/db";
+import cors from "cors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import routes from "./routes";
+import "dotenv/config";
+
 const app = express();
-require("dotenv").config();
 
 app.use(cors("*"));
-app.use(morgan("dev"));
+app.use(morgan("combined"));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -18,5 +20,6 @@ app.get('/health', (req, res) => {
 app.use("/api", routes);
 
 app.listen(process.env.PORT || 3001, () => {
-  console.log("Servidor conectado");
+  console.log(". Servidor conectado");
+  connectDB()
 });
