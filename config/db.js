@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+async function connectToDatabase() {
+  try {
+    const client = await mongoose.connect(process.env.MONGO_URL);
+    console.log("DB Conectada");
+    return client;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const client = mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("DB Conectada"))
@@ -8,4 +18,4 @@ const client = mongoose
     console.log(error);
   });
 
-module.exports = client;
+module.exports = { connectToDatabase, client };
