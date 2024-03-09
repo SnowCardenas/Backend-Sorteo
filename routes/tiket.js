@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import Ticket from "../models/Ticket";
+import Ticket from "../models/Ticket.js";
 import { Resend } from "resend";
 
 const resendEmail = new Resend(

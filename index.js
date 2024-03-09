@@ -1,9 +1,9 @@
 import express from "express";
-import { connectDB } from "./config/db";
+import { connectDB } from "./config/db.js";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import routes from "./routes";
+import routes from "./routes/index.js";
 import "dotenv/config";
 
 const app = express();

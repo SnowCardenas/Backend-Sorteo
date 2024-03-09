@@ -1,9 +1,9 @@
 import { Router } from "express";
 const router = Router();
 import { hash, compare } from "bcrypt";
-import { sign, verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-import User from "../models/User";
+import User from "../models/User.js";
 
 // Endpoints
 
@@ -44,7 +44,7 @@ router.post("/signIn", async (req, res) => {
     if (!isMatch) {
       return res.status(400).send("Password Incorrecto");
     }
-    sign({ email: existUser.email, id: existUser._id }, process.env.SECRET, { expiresIn: "1d" }, (err, token) => {
+    jwt.sign({ email: existUser.email, id: existUser._id }, process.env.SECRET, { expiresIn: "1d" }, (err, token) => {
       if (err) {
         throw err;
       }
@@ -61,7 +61,7 @@ router.get("/profile", (req, res) => {
     return res.status(401).send({ message: "No tienes un token" });
   }
   if (token) {
-    verify(token, process.env.SECRET, (err, user) => {
+    jwt.verify(token, process.env.SECRET, (err, user) => {
       if (err) {
         throw err;
       }
