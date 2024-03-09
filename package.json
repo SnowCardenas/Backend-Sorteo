@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "build": "node build.js"
   },
-  "author": "Martin Perez",
+  "author": "Miguel Cardenas",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
