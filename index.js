@@ -39,6 +39,6 @@ setInterval(() => {
   wakeUp()
 }, 60000);
 
-app.listen(3001, () => {
-  console.log("Servidor conectado en el puerto 3001");
+app.listen(process.env.PORT, () => {
+  console.log("Servidor conectado andando");
 });
