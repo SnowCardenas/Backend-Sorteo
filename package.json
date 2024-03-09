@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js",
-    "build": "node build.js"
+    "dev": "nodemon index.js",
+    "build": "node build.js",
+    "start": "node index.js"
   },
   "author": "Miguel Cardenas",
   "license": "ISC",
