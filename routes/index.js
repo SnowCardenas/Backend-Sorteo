@@ -1,11 +1,11 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 //Modelos
-const User = require("./user");
-const Ticket = require("./tiket");
+import User from "./user.js";
+import Ticket from "./tiket.js";
 
 router.use("/user", User);
 router.use("/ticket", Ticket);
 
-module.exports = router;
+export default router;

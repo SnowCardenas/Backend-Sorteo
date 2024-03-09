@@ -1,15 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const Ticket = require("../models/Ticket");
-const ResendImport = require("resend");
+import { Router } from "express";
+const router = Router();
+import Ticket from "../models/Ticket.js";
+import { Resend } from "resend";
 
-const resendEmail = new ResendImport.Resend(
+const resendEmail = new Resend(
   "re_RS8DwDZf_A7WbFTdc8DZiyBSYvhKyZvTq"
 );
-// Endpoints
 
 router.get("/allTickets", async (req, res) => {
-  const tickets = await Ticket.findOne({});
+  const tickets = await Ticket.findOne();
   res.send(tickets);
 });
 
@@ -256,4 +255,4 @@ router.delete("/deleteAllTickets", async (req, res) => {
   res.status(201).send("Todos los tickets fueron borrados");
 });
 
-module.exports = router;
+export default router;

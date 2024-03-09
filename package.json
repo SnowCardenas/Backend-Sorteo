@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "build": "node build.js",
-    "start": "node index.js"
+    "build": "node index.js",
+    "start": "node index.js",
+    "server": "node index.js"
   },
   "author": "Miguel Cardenas",
   "license": "ISC",
